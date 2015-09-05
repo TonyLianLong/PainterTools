@@ -7,7 +7,7 @@ VERSION_NUMBER = 0x01;
 FILE_HEADER_LENGTH = 32;
 #It will fill the unused bytes of header with NULL
 def chrs(number,char_number):
-	#Turn large numbers into many ASCII characters
+	#Turn a large number into many ASCII characters
 	str = "";
 	while char_number>0:
 		char_number -= 1;
