@@ -86,7 +86,7 @@ def send_dot_array(ser,dot_array):
 		i+=1;
 def get_distance(x1,y1,x2,y2):
 	return numpy.sqrt(pow(x1-x2,2)+pow(y1-y2,2));
-def search_for_the_shortest_distance(way,unsearched_dot,dot_array_distance):
+def search_for_the_shortest_distance(way,unsearched_dot,dot_array_distance,zero_to_dot_distance):
 	searchresults = [];
 	i = 0;
 	while i < len(unsearched_dot):
@@ -98,7 +98,7 @@ def search_for_the_shortest_distance(way,unsearched_dot,dot_array_distance):
 			#It is empty
 			break;
 		#print(way,unsearched_dot);
-		searchresult = search_for_the_shortest_distance(new_way,new_unsearched_dot,dot_array_distance);
+		searchresult = search_for_the_shortest_distance(new_way,new_unsearched_dot,dot_array_distance,zero_to_dot_distance);
 		searchresults.append(searchresult);
 		i+=1;
 	if len(unsearched_dot) > 0:
@@ -112,16 +112,17 @@ def search_for_the_shortest_distance(way,unsearched_dot,dot_array_distance):
 		length = searchresults[minindex][1];
 		way = searchresults[minindex][0];
 	else:
-		length = 0;
+		length = zero_to_dot_distance[way[0]];#Get the distance of 0 to the first dot
 		i = 0;
 		while i < (len(way)-1):
 			#print("Length",i,dot_array_distance[way[i]][way[i+1]]);
 			length += dot_array_distance[way[i]][way[i+1]];
 			i+=1;
+		#print(length);
 	return [way,length];
-def get_shortest_distance(dot_array_distance):
+def get_shortest_distance(dot_array_distance,zero_to_dot_distance):
 	way = [];
-	searchresult = search_for_the_shortest_distance(way,range(len(dot_array_distance)),dot_array_distance);
+	searchresult = search_for_the_shortest_distance(way,range(len(dot_array_distance)),dot_array_distance,zero_to_dot_distance);
 	#print(searchresult);
 	return searchresult[0];#searchresult[0] is the way searchresult[1] is the length
 def get_the_shortest_dot_array(dot_array):
@@ -139,8 +140,14 @@ def get_the_shortest_dot_array(dot_array):
 				dot_array_distance[i].append(0);#The distance to itself
 			j += 1;
 		i += 1;
-	#print(dot_array_distance);
-	searchresult = get_shortest_distance(dot_array_distance);
+	zero_to_dot_distance = [];
+	i = 0;
+	while i < len(dot_array):
+		zero_to_dot_distance.append(get_distance(0,0,dot_array[i][1],dot_array[i][0]));#Set the distance from 0 to every dot
+		i += 1;
+	print(dot_array_distance);
+	print(zero_to_dot_distance);
+	searchresult = get_shortest_distance(dot_array_distance,zero_to_dot_distance);
 	i = 0;
 	while i < len(searchresult):
 		new_dot_array.append(dot_array[searchresult[i]]);
